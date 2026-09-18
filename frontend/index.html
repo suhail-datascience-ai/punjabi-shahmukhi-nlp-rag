@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنجابی NLP Intelligence — شاہ مکھی</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:#1c1712;
+    --paper:#f6efe2;
+    --panel:#fffaf0;
+    --line:#d8c9a8;
+    --saffron:#c8722a;
+    --teak:#5b6b4f;
+    --indigo:#3a4a63;
+    --muted:#8a7c63;
+    --danger:#a3402c;
+    --radius:2px;
+  }
+  [data-theme="dark"]{
+    --ink:#eee3cf;
+    --paper:#161310;
+    --panel:#1e1a15;
+    --line:#3a3128;
+    --saffron:#e08a44;
+    --teak:#8ba377;
+    --indigo:#7f9bc4;
+    --muted:#9c8f76;
+    --danger:#e07357;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eee3cf; --paper:#161310; --panel:#1e1a15; --line:#3a3128;
+      --saffron:#e08a44; --teak:#8ba377; --indigo:#7f9bc4; --muted:#9c8f76; --danger:#e07357;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'JetBrains Mono', ui-monospace, monospace;
+    min-height:100vh;
+  }
+  .urdu{ font-family:'Noto Nastaliq Urdu', serif; line-height:2.6; font-size:1.15rem; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:28px 20px 80px; }
+
+  header{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:26px;
+    gap:16px; flex-wrap:wrap;
+  }
+  .title-block h1{
+    font-family:'Noto Nastaliq Urdu', serif; font-size:2.1rem; margin:0 0 6px;
+    font-weight:700; direction:rtl;
+  }
+  .title-block .sub{
+    font-size:.78rem; letter-spacing:.02em; color:var(--muted); direction:ltr; text-align:left;
+  }
+  .status-line{ font-size:.72rem; color:var(--muted); direction:ltr; text-align:left; }
+  .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-inline-end:5px; background:var(--muted); }
+  .dot.up{ background:var(--teak); }
+  .dot.down{ background:var(--danger); }
+
+  .base-url{ direction:ltr; text-align:left; margin-bottom:22px; font-size:.75rem; color:var(--muted); }
+  .base-url input{
+    font-family:inherit; font-size:.75rem; background:transparent; border:none; border-bottom:1px dotted var(--line);
+    color:var(--ink); width:230px; padding:2px 0;
+  }
+  .base-url input:focus{ outline:none; border-color:var(--saffron); }
+
+  nav{ display:flex; gap:2px; margin-bottom:22px; border:1px solid var(--line); direction:ltr; }
+  nav button{
+    flex:1; background:none; border:none; color:var(--muted); font-family:inherit;
+    padding:11px 8px; font-size:.82rem; cursor:pointer; border-inline-end:1px solid var(--line);
+    letter-spacing:.01em;
+  }
+  nav button:last-child{ border-inline-end:none; }
+  nav button.active{ background:var(--panel); color:var(--ink); font-weight:600; }
+  nav button.active:after{ content:""; }
+
+  section.panel{ display:none; }
+  section.panel.active{ display:block; }
+
+  .card{ background:var(--panel); border:1px solid var(--line); padding:22px; margin-bottom:18px; }
+
+  label.field-label{
+    display:block; font-size:.72rem; color:var(--muted); margin-bottom:8px; direction:ltr; text-align:left;
+  }
+  textarea{
+    width:100%; min-height:110px; background:var(--paper); color:var(--ink); border:1px solid var(--line);
+    font-family:'Noto Nastaliq Urdu', serif; font-size:1.1rem; padding:14px; resize:vertical; direction:rtl;
+    line-height:2.2;
+  }
+  textarea:focus{ outline:none; border-color:var(--saffron); }
+
+  .row{ display:flex; gap:12px; align-items:center; margin-top:14px; direction:ltr; flex-wrap:wrap; }
+  button.run{
+    background:var(--saffron); color:#fff8ee; border:none; padding:11px 22px; font-family:inherit;
+    font-size:.82rem; cursor:pointer; letter-spacing:.02em;
+  }
+  button.run:hover{ filter:brightness(1.06); }
+  button.run:disabled{ opacity:.5; cursor:default; }
+  .k-input{ display:flex; align-items:center; gap:6px; font-size:.75rem; color:var(--muted); }
+  .k-input input{ width:44px; font-family:inherit; background:var(--paper); border:1px solid var(--line); color:var(--ink); padding:5px 6px; }
+
+  .sample-row{ margin-top:10px; direction:ltr; text-align:left; }
+  .sample-row button{
+    background:none; border:1px solid var(--line); color:var(--muted); font-family:inherit;
+    font-size:.7rem; padding:5px 10px; margin-inline-end:6px; margin-top:6px; cursor:pointer;
+  }
+  .sample-row button:hover{ border-color:var(--saffron); color:var(--ink); }
+
+  .result{ margin-top:20px; }
+  .badge-row{ display:flex; gap:8px; flex-wrap:wrap; direction:ltr; margin-bottom:14px; }
+  .badge{
+    border:1px solid var(--line); padding:8px 12px; font-size:.72rem; color:var(--muted);
+    display:flex; justify-content:space-between; gap:14px; min-width:120px;
+  }
+  .badge b{ color:var(--ink); font-size:.85rem; }
+  .label-pill{
+    display:inline-block; background:var(--indigo); color:#fff; padding:5px 14px; font-size:.85rem;
+    direction:ltr;
+  }
+  .score-bar-row{ display:flex; align-items:center; gap:10px; margin:6px 0; direction:ltr; font-size:.72rem; }
+  .score-bar-row .name{ width:100px; color:var(--muted); }
+  .score-bar-track{ flex:1; height:8px; background:var(--paper); border:1px solid var(--line); }
+  .score-bar-fill{ height:100%; background:var(--teak); }
+  .score-bar-row .pct{ width:44px; text-align:left; color:var(--muted); }
+
+  .ner-output{ font-family:'Noto Nastaliq Urdu', serif; font-size:1.15rem; line-height:3; direction:rtl; }
+  .ner-tok{ padding:2px 3px; }
+  .ent-PER{ background:#d9c1e8; border-bottom:2px solid #7d4d9c; }
+  .ent-LOC{ background:#c3ddc4; border-bottom:2px solid #3f6b41; }
+  .ent-ORG{ background:#f6d9a8; border-bottom:2px solid #a3702a; }
+  .ent-MISC{ background:#f2c9c0; border-bottom:2px solid #a3402c; }
+  [data-theme="dark"] .ent-PER, :root:not([data-theme="light"]) .ent-PER{ background:#3a2a44; }
+  [data-theme="dark"] .ent-LOC, :root:not([data-theme="light"]) .ent-LOC{ background:#243b26; }
+  [data-theme="dark"] .ent-ORG, :root:not([data-theme="light"]) .ent-ORG{ background:#463822; }
+  [data-theme="dark"] .ent-MISC, :root:not([data-theme="light"]) .ent-MISC{ background:#442822; }
+  .ent-tag{ font-family:'JetBrains Mono',monospace; font-size:.55rem; vertical-align:super; color:var(--muted); }
+
+  .legend{ direction:ltr; font-size:.7rem; color:var(--muted); margin-top:12px; }
+  .legend span{ margin-inline-end:14px; }
+  .legend i{ display:inline-block; width:10px; height:10px; margin-inline-end:4px; vertical-align:-1px; }
+
+  .passage{ border-top:1px dashed var(--line); padding:16px 0; }
+  .passage:first-child{ border-top:none; padding-top:0; }
+  .passage .meta{ direction:ltr; font-size:.68rem; color:var(--muted); margin-bottom:8px; display:flex; justify-content:space-between; }
+  .passage .summary{ font-family:'Noto Nastaliq Urdu', serif; font-size:1.05rem; color:var(--saffron); margin-bottom:6px; direction:rtl; }
+  .passage .body{ font-family:'Noto Nastaliq Urdu', serif; font-size:1rem; direction:rtl; color:var(--ink); opacity:.9; }
+
+  .empty, .err{ direction:ltr; font-size:.8rem; color:var(--muted); }
+  .err{ color:var(--danger); }
+
+  footer{ margin-top:36px; border-top:1px solid var(--line); padding-top:16px; direction:ltr; font-size:.68rem; color:var(--muted); }
+  a{ color:var(--indigo); }
+
+  .theme-toggle{
+    background:none; border:1px solid var(--line); color:var(--muted); font-family:inherit;
+    font-size:.68rem; padding:5px 9px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title-block">
+      <h1>پنجابی این‌ایل‌پی انٹیلیجنس</h1>
+      <div class="sub">Shahmukhi Punjabi NLP · Classification · NER · RAG</div>
+    </div>
+    <div style="text-align:left;">
+      <div class="status-line" id="statusLine"><span class="dot" id="statusDot"></span>checking backend…</div>
+      <button class="theme-toggle" id="themeToggle" style="margin-top:8px;">toggle theme</button>
+    </div>
+  </header>
+
+  <div class="base-url">
+    API base URL: <input id="baseUrl" type="text" value="http://localhost:8000" spellcheck="false">
+    <span id="backendInfo"></span>
+  </div>
+
+  <nav>
+    <button class="tab-btn active" data-tab="classify">درجہ بندی / Classify</button>
+    <button class="tab-btn" data-tab="ner">اداروں کی شناخت / NER</button>
+    <button class="tab-btn" data-tab="rag">RAG تلاش / Search</button>
+  </nav>
+
+  <!-- CLASSIFY -->
+  <section class="panel active" id="panel-classify">
+    <div class="card">
+      <label class="field-label">Paste a Punjabi (Shahmukhi) news sentence or paragraph</label>
+      <textarea id="classifyInput" placeholder="پاکستان کرکٹ ٹیم نے ورلڈ کپ جتیا..."></textarea>
+      <div class="sample-row">
+        <button data-target="classifyInput" data-sample="0">sports sample</button>
+        <button data-target="classifyInput" data-sample="1">politics sample</button>
+        <button data-target="classifyInput" data-sample="2">history sample</button>
+      </div>
+      <div class="row">
+        <button class="run" id="runClassify">Classify →</button>
+      </div>
+    </div>
+    <div class="result" id="classifyResult"></div>
+  </section>
+
+  <!-- NER -->
+  <section class="panel" id="panel-ner">
+    <div class="card">
+      <label class="field-label">Paste text to tag people, places, organizations, and misc entities</label>
+      <textarea id="nerInput" placeholder="عمران خان لاهور وچ اک جلسہ کرن گے..."></textarea>
+      <div class="sample-row">
+        <button data-target="nerInput" data-sample="3">entity-rich sample</button>
+      </div>
+      <div class="row">
+        <button class="run" id="runNer">Tag entities →</button>
+      </div>
+    </div>
+    <div class="result" id="nerResult"></div>
+  </section>
+
+  <!-- RAG -->
+  <section class="panel" id="panel-rag">
+    <div class="card">
+      <label class="field-label">Ask a question — retrieves the most relevant Wikipedia-derived passages</label>
+      <textarea id="ragInput" style="min-height:70px;" placeholder="اشوک دی مذہبی راجگیری کیویں سی؟"></textarea>
+      <div class="sample-row">
+        <button data-target="ragInput" data-sample="4">try a sample question</button>
+      </div>
+      <div class="row">
+        <div class="k-input">top-k <input id="ragK" type="number" value="3" min="1" max="10"></div>
+        <button class="run" id="runRag">Search →</button>
+      </div>
+    </div>
+    <div class="result" id="ragResult"></div>
+  </section>
+
+  <footer>
+    Backend: FastAPI · Classifier: TF-IDF+LogReg baseline (swap to fine-tuned XLM-R via config) ·
+    NER: lexicon-bootstrap silver labels (swap to fine-tuned XLM-R) · RAG: TF-IDF retrieval over 296 Wikipedia article/summary pairs.
+    Source: <a href="https://github.com/" target="_blank" rel="noopener">GitHub repository</a>.
+  </footer>
+
+</div>
+
+<script>
+const SAMPLES = [
+  "پاکستان کرکٹ ٹیم نے ورلڈ کپ دے فائنل وچ زبردست کارکردگی وکھائی۔",
+  "وزیراعظم نے پارلیمنٹ وچ نویں پالیسی دا اعلان کیتا۔",
+  "چنگیز خان نے منگول سلطنت نوں ایشیا دے وڈے حصے تک پھیلایا۔",
+  "عمران خان تے نواز شریف نے لاهور وچ اک جلسے وچ شرکت کیتی جدوں کہ اقوام متحدہ دا وفد اسلام آباد پہنچیا۔",
+  "اشوک دی مذہبی راجگیری کیویں سی؟"
+];
+
+function baseUrl(){ return document.getElementById('baseUrl').value.replace(/\/$/, ''); }
+
+document.querySelectorAll('.sample-row button[data-sample]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById(btn.dataset.target).value = SAMPLES[+btn.dataset.sample];
+  });
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', ()=>{
+  const cur = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+});
+
+async function checkHealth(){
+  const dot = document.getElementById('statusDot');
+  const line = document.getElementById('statusLine');
+  const info = document.getElementById('backendInfo');
+  try{
+    const res = await fetch(baseUrl() + '/health');
+    if(!res.ok) throw new Error('bad status');
+    const data = await res.json();
+    dot.className = 'dot up';
+    line.innerHTML = '<span class="dot up"></span>backend online';
+    info.textContent = ' — ' + data.classifier_backend + ' · ' + data.ner_backend + ' · ' + data.rag_backend;
+  }catch(e){
+    dot.className = 'dot down';
+    line.innerHTML = '<span class="dot down"></span>backend unreachable — start it with: uvicorn backend.app.main:app --port 8000';
+    info.textContent = '';
+  }
+}
+checkHealth();
+document.getElementById('baseUrl').addEventListener('change', checkHealth);
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('runClassify').addEventListener('click', async ()=>{
+  const text = document.getElementById('classifyInput').value.trim();
+  const out = document.getElementById('classifyResult');
+  if(!text){ out.innerHTML = '<p class="empty">Enter some text first.</p>'; return; }
+  out.innerHTML = '<p class="empty">running…</p>';
+  try{
+    const res = await fetch(baseUrl()+'/classify', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+    if(!res.ok) throw new Error(await res.text());
+    const d = await res.json();
+    const sorted = Object.entries(d.all_scores).sort((a,b)=>b[1]-a[1]);
+    let bars = sorted.map(([k,v])=>`
+      <div class="score-bar-row">
+        <div class="name">${k}</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${(v*100).toFixed(1)}%"></div></div>
+        <div class="pct">${(v*100).toFixed(1)}%</div>
+      </div>`).join('');
+    out.innerHTML = `<div class="label-pill">${d.label}</div><div style="margin-top:14px;">${bars}</div>
+      <div class="badge-row" style="margin-top:16px;"><div class="badge">backend<br><b>${d.backend}</b></div></div>`;
+  }catch(e){ out.innerHTML = `<p class="err">Request failed: ${e.message}</p>`; }
+});
+
+document.getElementById('runNer').addEventListener('click', async ()=>{
+  const text = document.getElementById('nerInput').value.trim();
+  const out = document.getElementById('nerResult');
+  if(!text){ out.innerHTML = '<p class="empty">Enter some text first.</p>'; return; }
+  out.innerHTML = '<p class="empty">running…</p>';
+  try{
+    const res = await fetch(baseUrl()+'/ner', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+    if(!res.ok) throw new Error(await res.text());
+    const d = await res.json();
+    let html = '<div class="ner-output">';
+    for(let i=0;i<d.tokens.length;i++){
+      const tag = d.tags[i];
+      if(tag === 'O'){ html += `<span class="ner-tok">${escapeHtml(d.tokens[i])}</span> `; }
+      else{
+        const type = tag.split('-')[1];
+        html += `<span class="ner-tok ent-${type}">${escapeHtml(d.tokens[i])}<span class="ent-tag">${type}</span></span> `;
+      }
+    }
+    html += '</div>';
+    html += `<div class="legend">
+      <span><i style="background:#c3ddc4"></i>LOC</span>
+      <span><i style="background:#d9c1e8"></i>PER</span>
+      <span><i style="background:#f6d9a8"></i>ORG</span>
+      <span><i style="background:#f2c9c0"></i>MISC</span>
+    </div>`;
+    html += `<div class="badge-row" style="margin-top:16px;"><div class="badge">backend<br><b>${d.backend}</b></div><div class="badge">entities found<br><b>${d.entities.length}</b></div></div>`;
+    out.innerHTML = html;
+  }catch(e){ out.innerHTML = `<p class="err">Request failed: ${e.message}</p>`; }
+});
+
+document.getElementById('runRag').addEventListener('click', async ()=>{
+  const query = document.getElementById('ragInput').value.trim();
+  const top_k = +document.getElementById('ragK').value || 3;
+  const out = document.getElementById('ragResult');
+  if(!query){ out.innerHTML = '<p class="empty">Enter a question first.</p>'; return; }
+  out.innerHTML = '<p class="empty">searching…</p>';
+  try{
+    const res = await fetch(baseUrl()+'/rag/query', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query, top_k})});
+    if(!res.ok) throw new Error(await res.text());
+    const d = await res.json();
+    let html = '';
+    if(d.generated_answer){
+      html += `<div class="card" style="margin-bottom:20px;"><div class="urdu">${escapeHtml(d.generated_answer)}</div></div>`;
+    }
+    html += d.passages.map(p => `
+      <div class="passage">
+        <div class="meta"><span>doc #${p.doc_id}</span><span>similarity ${(p.score*100).toFixed(1)}%</span></div>
+        ${p.summary ? `<div class="summary">${escapeHtml(p.summary)}</div>` : ''}
+        <div class="body">${escapeHtml(p.text)}</div>
+      </div>`).join('');
+    html += `<div class="badge-row" style="margin-top:16px;"><div class="badge">backend<br><b>${d.backend}</b></div></div>`;
+    out.innerHTML = html || '<p class="empty">No passages found.</p>';
+  }catch(e){ out.innerHTML = `<p class="err">Request failed: ${e.message}</p>`; }
+});
+</script>
+</body>
+</html>

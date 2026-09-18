@@ -1,0 +1,47 @@
+# --- Core / always needed (offline demo runs on these alone) ---------------
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+joblib>=1.3
+openpyxl>=3.1
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+
+# --- Data collection (web scraping stage) -----------------------------------
+requests>=2.31
+beautifulsoup4>=4.12
+wikiextractor>=3.0.7   # only needed for src/pretraining/build_pretraining_corpus.py --extract
+
+# --- Transformer fine-tuning (classification + NER) and Phase 2 pretraining
+# — run on your GPU machine or Colab/Kaggle; not required for the offline
+# TF-IDF/lexicon demo. Pinned to <5.0: transformers 5.x changed the
+# TrainingArguments API (e.g. removed `overwrite_output_dir`) in ways that
+# break the scripts in src/classification/, src/ner/, and src/pretraining/
+# as written. Bump the pin only after you've re-tested those scripts.
+torch>=2.1
+transformers>=4.40,<5.0
+accelerate>=0.26
+datasets>=2.19
+evaluate>=0.4
+seqeval>=1.2
+tokenizers>=0.19
+
+# --- Dense RAG upgrade path (optional — see src/rag/retriever.py) ----------
+sentence-transformers>=2.7
+faiss-cpu>=1.8
+
+# --- Hyperparameter search (optional, matches original notebook's Optuna
+# phase) -----------------------------------------------------------------
+optuna>=3.6
+
+# --- Optional generative RAG answers (only used if ANTHROPIC_API_KEY set) --
+anthropic>=0.34
+
+# --- Visualization / evaluation ----------------------------------------------
+matplotlib>=3.8
+seaborn>=0.13
+
+# --- Dev / testing -----------------------------------------------------------
+pytest>=8.0
+httpx>=0.27

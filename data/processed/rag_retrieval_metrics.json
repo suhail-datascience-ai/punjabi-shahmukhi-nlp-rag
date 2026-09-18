@@ -1,0 +1,8 @@
+{
+  "n_queries": 296,
+  "recall_at_1": 0.5709,
+  "recall_at_3": 0.777,
+  "recall_at_5": 0.8311,
+  "mrr": 0.6745,
+  "retriever_backend": "tfidf"
+}

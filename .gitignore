@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+.venv/
+venv/
+
+# Large trained artifacts — do not commit to git. Push to Hugging Face Hub
+# or GitHub Releases instead, and keep only the small TF-IDF baseline +
+# RAG index (a few MB) in git if you want the offline demo to work out of
+# the box for anyone who clones the repo.
+models/xlmr_classifier/
+models/xlmr_ner/
+*.bin
+*.safetensors
+
+# Keep small, git-friendly artifacts:
+!models/tfidf_logreg_classifier.joblib
+!models/rag_index/
+
+data/processed/*.tsv
+.DS_Store
+
+# Phase 2 pretraining artifacts — large, regenerate via src/pretraining/
+data/pretraining_raw/
+models/punjabi_shahmukhi_tokenizer_*/
+models/punjabi_shahmukhi_encoder_*/
+logs/
