@@ -1,0 +1,35 @@
+{
+  "train": {
+    "rows": 1159,
+    "labels": {
+      "history": 523,
+      "sports": 310,
+      "geography": 198,
+      "politics": 72,
+      "entertainment": 56
+    },
+    "sha256": "ec6444c7c685e3d801db894d87146774844d71abc180cfcc02b2645868d3b379"
+  },
+  "val": {
+    "rows": 145,
+    "labels": {
+      "history": 66,
+      "sports": 39,
+      "geography": 24,
+      "politics": 9,
+      "entertainment": 7
+    },
+    "sha256": "ca0a9020ae36715adc6b76b7358addf2e99723e875a534ab1dd428701216a247"
+  },
+  "test": {
+    "rows": 145,
+    "labels": {
+      "history": 65,
+      "sports": 39,
+      "geography": 25,
+      "politics": 9,
+      "entertainment": 7
+    },
+    "sha256": "a67382f9403ca6d4a4d803f952b2b5f2caaf35ed0e54a76c10946ae2e35a346c"
+  }
+}

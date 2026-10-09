@@ -27,6 +27,17 @@ Pretrained a from-scratch 8M-parameter encoder (`--config small`) on the full pn
 
 Training details: 20 epochs over the 32.5M-token corpus, loss plateaued around 3.20-3.24 after ~epoch 15 (further epochs on this same corpus are unlikely to help — more raw data or a larger config, per the Tier 2 plan below, are the next real levers).
 
+## Held-Out Test Set Results (frozen splits)
+
+The original project had a train/val/test split but only train and val were saved. The test set (145 rows) was recovered as the full dataset minus train minus val, checked for overlap, duplicates and label conflicts (none found), and frozen with file hashes in `data/splits/MANIFEST.json`. It was never used for training or model selection. Produced by `python -m src.evaluation.classification_test_eval`.
+
+| Model | Accuracy (95% CI) | Macro F1 (95% CI) |
+|---|---|---|
+| TF-IDF + Logistic Regression | 0.876 (0.814-0.931) | 0.831 (0.718-0.913) |
+| XLM-R-base fine-tuned | 0.910 (0.862-0.952) | 0.909 (0.836-0.957) |
+
+Confidence intervals are bootstrap 95% intervals (1,000 resamples). An exact McNemar test on the 13 documents where the models disagree (4 only TF-IDF correct, 9 only XLM-R correct) gives p = 0.267, so the accuracy difference is not statistically significant on this test set. The macro F1 gap comes mostly from the two smallest classes (politics: 9 test documents, entertainment: 7), where about 4 documents separate the models. Read this as "XLM-R point estimates are higher, not shown to be significantly better"; cross-validation on the full dataset is the next step to firm this up.
+
 ## Reported metrics — Tier 1 (computed on this exact dataset; reproducible via the commands shown)
 
 ### Classification (TF-IDF + Logistic Regression)
