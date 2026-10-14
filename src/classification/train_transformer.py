@@ -120,6 +120,7 @@ def main() -> None:
         num_train_epochs=8,
         weight_decay=0.01,
         load_best_model_at_end=True,
+        save_total_limit=1,
         metric_for_best_model="macro_f1",
         logging_steps=20,
         report_to=[],
